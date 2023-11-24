@@ -28,11 +28,33 @@ $result = $mysqli->query($sql);
     </div>
   </div>
 
+  <div class="modal fade" id="renew-reg-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title w-100" id="modal-title">Confirm</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p>Are you sure you want to renew all books?</p>
+          <form name='renewallform' class='text-center' id='renewallform' method='post'>
+            <button id="renewall" name="renewall" class="btn btn-orange mb-3" value='confirmation'>Renew All</button>
+          </form>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <body style="width: 100%; min-height: 100vh; display: -webkit-box; display: -webkit-flex; display: -moz-box; display: -ms-flexbox; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; padding: 15px; background: #F4CABC;">
 	  <div class="container text-center" style="width: 1200px; background: #fff; border-radius: 10px; overflow: hidden; padding: 33px 55px 33px 55px; box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1); -o-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1); -ms-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);">
 	  	<h1 class="text-center pb-2 display-4">Library Log</h1>
 
 	<button onclick="window.location.href='./index.php';" id="showlog" name="showlog" class="btn btn-orange mb-3">Return Home</button>
+
+	<hr>
+
+	<button class="btn btn-orange mb-3" data-bs-toggle='modal' data-bs-target='#renew-reg-modal'>Renew All (For Holiday Weeks)</button>
 
 	<table id="example" class="table table-striped table-bordered table-hover" style="width:100%">
 	<thead>
@@ -48,6 +70,14 @@ $result = $mysqli->query($sql);
 	</thead>
 	<tbody>
 <?php
+if(array_key_exists('renewall', $_POST)) {
+	$sql = "CREATE TEMPORARY TABLE tmp_value AS SELECT dueDate FROM librarylog";
+	$result = $mysqli->query($sql) or die(mysqli_error($mysqli));
+	$sql = "UPDATE librarylog SET dueDate = DATE_ADD((SELECT dueDate FROM tmp_value), INTERVAL 1 WEEK)";
+	$result = $mysqli->query($sql) or die(mysqli_error($mysqli));
+  echo "<div class='alert alert-danger' role='alert'>All books renewed by 1 week</div>";
+}
+
 if(array_key_exists('delete', $_POST)) {
 	$bookId = addslashes($_POST["delete"]);
 	$sql = "DELETE FROM librarylog WHERE bookId = '$bookId'";

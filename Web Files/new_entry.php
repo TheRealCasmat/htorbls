@@ -20,9 +20,9 @@ foreach($bookId as $value) {
 	$sql = "INSERT INTO librarylog (patronName, contactInfo, bookId, issueDate, dueDate, fineAmount) VALUES ('$patronName', '$contactInfo', '$value', CURRENT_DATE, DATE_ADD(CURRENT_DATE, INTERVAL 1 WEEK), '0.00')";
 	$result = $mysqli->query($sql);
 	if(strpos(mysqli_error($mysqli), 'Duplicate entry') !== false) {
-		echo "<div class='alert alert-danger' role='alert'>Error: <b>$value</b> already exists</div>";
+		echo "<div class='alert alert-danger' role='alert'>Error: <b>$value has not been added to the log</b> due to already existing</div>";
 	} elseif(strpos(mysqli_error($mysqli), 'Cannot add or update a child row: a foreign key constraint fails') !== false) {
-		echo "<div class='alert alert-danger' role='alert'>Error: <b>$value</b> does not exist in the Book List. Check if the Book ID is correct. Otherwise, create a New Book entry on the home page and then resubmit this form.</div>";
+		echo "<div class='alert alert-danger' role='alert'>Error: <b>$value has not been added to the log</b> due to not existing in the Book List. Check if the Book ID is correct. Otherwise, create a New Book entry on the home page and then resubmit this form.</div>";
 	}
 }
 ?>
