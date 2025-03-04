@@ -11,7 +11,7 @@ $result = $mysqli->query($sql);
     <div class="container text-center" style="width: 750px; background: #fff; border-radius: 10px; overflow: hidden; padding: 33px 55px 33px 55px; box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1); -o-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1); -ms-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);">
       <h1 class="text-center pb-2 display-4">Book ID Tool</h1>
 <?php
-$bookId = preg_replace('/\s+/', '', trim(addslashes($_GET["bookId"])));
+$bookId = strtoupper(preg_replace('/\s+/', '', trim(addslashes($_GET["bookId"]))));
 
 echo "<h4>Entry for <b>$bookId</b></h4>";
 
@@ -49,36 +49,41 @@ if ($result->num_rows > 0 && $result2->num_rows > 0) {
     }
 
     echo "
+                  <div class='mb-3 text-center' id='image-preview-div'>
+  <label id='imgNew' for='exampleInputFile'><b>Image:</b></label>
+  <br>
+  <img id='previewImg' src='http://library.htor.org/images/books/$bookId.jpeg?rand=" .rand(). "' style='max-height: 500px display: none' class='rounded img-fluid'>
+</div>
 
     <ul class='list-group list-group-horizontal'>
       <li class='list-group-item'>Patron Name</li>
       <li class='list-group-item'>" .$row['patronName']. "</li>
     </ul>
-    <ul class='list-group list-group-horizontal-sm'>
+    <ul class='list-group list-group-horizontal'>
       <li class='list-group-item'>Contact Info</li>
       <li class='list-group-item'>" .$row['contactInfo']. "</li>
     </ul>
-    <ul class='list-group list-group-horizontal-md'>
+    <ul class='list-group list-group-horizontal'>
       <li class='list-group-item'>Issue Date</li>
       <li class='list-group-item'>" .$row['issueDate']. "</li>
     </ul>
-    <ul class='list-group list-group-horizontal-lg'>
+    <ul class='list-group list-group-horizontal'>
       <li class='list-group-item'>Due Date</li>
       <li class='list-group-item'>" .$row['dueDate']. $dueToday. "</li>
     </ul>
-    <ul class='list-group list-group-horizontal-xl'>
+    <ul class='list-group list-group-horizontal'>
       <li class='list-group-item'>Fine Amount</li>
       <li class='list-group-item'>" ."$" .$row['fineAmount']. $fineToday. "</li>
     </ul>
-    <ul class='list-group list-group-horizontal-xl'>
+    <ul class='list-group list-group-horizontal'>
       <li class='list-group-item'>Book Name</li>
       <li class='list-group-item'>" .$row2['bookName']. "</li>
     </ul>
-    <ul class='list-group list-group-horizontal-xl'>
+    <ul class='list-group list-group-horizontal'>
       <li class='list-group-item'>Book Category</li>
       <li class='list-group-item'>" .$row2['bookCategory']. "</li>
     </ul>
-     <ul class='list-group list-group-horizontal-xl'>
+     <ul class='list-group list-group-horizontal'>
       <li class='list-group-item'>Book Additional Notes</li>
       <li class='list-group-item'>" .$row2['additionalNotes']. "</li>
     </ul>";
@@ -103,16 +108,20 @@ if ($result->num_rows > 0 && $result2->num_rows > 0) {
     echo "<div class='alert alert-success' role='alert'>Status: <b>Available</b></div>";
     $row2 = $result2->fetch_assoc();
     echo "
-
+                      <div class='mb-3 text-center' id='image-preview-div'>
+  <label id='imgNew' for='exampleInputFile'><b>Image:</b></label>
+  <br>
+  <img id='previewImg' src='http://library.htor.org/images/books/$bookId.jpeg?rand=" .rand(). "' style='max-height: 500px display: none' class='rounded img-fluid'>
+</div>
     <ul class='list-group list-group-horizontal'>
       <li class='list-group-item'>Book Name</li>
       <li class='list-group-item'>" .$row2['bookName']. "</li>
     </ul>
-    <ul class='list-group list-group-horizontal-sm'>
+    <ul class='list-group list-group-horizontal'>
       <li class='list-group-item'>Book Category</li>
       <li class='list-group-item'>" .$row2['bookCategory']. "</li>
     </ul>
-    <ul class='list-group list-group-horizontal-md'>
+    <ul class='list-group list-group-horizontal'>
       <li class='list-group-item'>Book Additional Notes</li>
       <li class='list-group-item'>" .$row2['additionalNotes']. "</li>
     </ul>";

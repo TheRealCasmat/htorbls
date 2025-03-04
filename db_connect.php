@@ -2,8 +2,8 @@
 
 // four variables to connect to the database
 $host = "localhost";
-$username = "root";
-$user_pass = "";
+$username = "USERNAME";
+$user_pass = "PASSWORD";
 $database_in_use = "library";
 
 // create a database connection instance

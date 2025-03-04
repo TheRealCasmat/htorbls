@@ -7,8 +7,20 @@ $sql = "UPDATE librarylog SET fineAmount = CEIL(GREATEST(DATEDIFF(CURRENT_DATE, 
 $result = $mysqli->query($sql);
 ?>
 <head>
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.bootstrap5.css">
 <title>HTOR BLS - Book List</title>
+<style type="text/css">
+  .buttons-html5, .buttons-print, .buttons-page-length {
+    padding: 5px;
+    margin: 5px;
+    box-shadow: none;
+    border-radius: 5px !important;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+    color: #000;
+  }
+</style>
 </head>
 
   <div class="modal fade" id="reg-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
@@ -51,6 +63,10 @@ if(array_key_exists('delete', $_POST)) {
   $bookId = addslashes($_POST["delete"]);
   $sql = "DELETE FROM booklist WHERE bookId = '$bookId'";
   $result = $mysqli->query($sql) or die(mysqli_error($mysqli));
+  $filename = "C:/wamp64/www/htorbls/images/books/" . $bookId . ".jpeg";
+  if(file_exists($filename)){
+    unlink($filename);
+  }
   echo "<div class='alert alert-danger' role='alert'>Item <b>$bookId</b> Deleted from Book List</div>";
 }
 
@@ -88,8 +104,17 @@ echo "</table>";
 echo "</div>";
 ?>
 
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.bootstrap5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
 <script type="text/javascript">
 $(document).on("click", ".delete-click", function () {
      var eventId = $(this).data('id');
@@ -97,11 +122,15 @@ $(document).on("click", ".delete-click", function () {
 });
 
 $('#example').DataTable( {
-  dom: 'Blfrtip',
   columnDefs: [
     { orderable: false, targets: 4 }
   ],
-  order: [[1, 'asc']]
+  order: [[1, 'asc']],
+      layout: {
+        topStart: {
+            buttons: ['pageLength', 'copy', 'csv', 'excel', 'pdf', 'print']
+        }
+    }
 });
 </script>
 </body>

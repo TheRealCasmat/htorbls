@@ -7,8 +7,22 @@ $sql = "UPDATE librarylog SET fineAmount = CEIL(GREATEST(DATEDIFF(CURRENT_DATE, 
 $result = $mysqli->query($sql);
 ?>
 <head>
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.bootstrap5.css">
+
 <title>HTOR BLS - Library Log</title>
+<style type="text/css">
+  .buttons-html5, .buttons-print, .buttons-page-length {
+    padding: 5px;
+    margin: 5px;
+    box-shadow: none;
+    border-radius: 5px !important;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+    color: #000;
+  }
+</style>
 </head>
   <div class="modal fade" id="reg-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -36,8 +50,10 @@ $result = $mysqli->query($sql);
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body text-center">
-          <p>Are you sure you want to renew all books?</p>
+          <p>Are you sure you want to renew all books? You can also revert accidental renewals.</p>
           <form name='renewallform' class='text-center' id='renewallform' method='post'>
+            <button id="revert" name="revert" class="btn btn-warning mb-3" value='confirmation'>Revert Renewal</button>
+            &nbsp;&nbsp;
             <button id="renewall" name="renewall" class="btn btn-orange mb-3" value='confirmation'>Renew All</button>
           </form>
         </form>
@@ -71,11 +87,15 @@ $result = $mysqli->query($sql);
 	<tbody>
 <?php
 if(array_key_exists('renewall', $_POST)) {
-	$sql = "CREATE TEMPORARY TABLE tmp_value AS SELECT dueDate FROM librarylog";
+	$sql = "UPDATE librarylog SET dueDate = DATE_ADD(dueDate, INTERVAL 1 WEEK)";
 	$result = $mysqli->query($sql) or die(mysqli_error($mysqli));
-	$sql = "UPDATE librarylog SET dueDate = DATE_ADD((SELECT dueDate FROM tmp_value), INTERVAL 1 WEEK)";
-	$result = $mysqli->query($sql) or die(mysqli_error($mysqli));
-  echo "<div class='alert alert-danger' role='alert'>All books renewed by 1 week</div>";
+  echo "<div class='alert alert-success' role='alert'>All books renewed by 1 week</div>";
+}
+
+if(array_key_exists('revert', $_POST)) {
+  $sql = "UPDATE librarylog SET dueDate = DATE_ADD(dueDate, INTERVAL -1 WEEK)";
+  $result = $mysqli->query($sql) or die(mysqli_error($mysqli));
+  echo "<div class='alert alert-success' role='alert'>All due dates reverted by 1 week</div>";
 }
 
 if(array_key_exists('delete', $_POST)) {
@@ -139,8 +159,17 @@ echo "</table>";
 echo "</div>";
 ?>
 
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.bootstrap5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
 <script type="text/javascript">
 $(document).on("click", ".delete-click", function () {
      var eventId = $(this).data('id');
@@ -149,10 +178,15 @@ $(document).on("click", ".delete-click", function () {
 
 $('#example').DataTable( {
   columnDefs: [
-    { orderable: false, targets: 6 }
+    { orderable: false, targets: 4 }
   ],
-  order: [[1, 'asc']]
-} );
+  order: [[1, 'asc']],
+      layout: {
+        topStart: {
+            buttons: ['pageLength', 'copy', 'csv', 'excel', 'pdf', 'print']
+        }
+    }
+});
 </script>
 </body>
 

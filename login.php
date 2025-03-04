@@ -16,7 +16,10 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['user_username'])) {
 	  <div class="container text-center" style="width: 750px; background: #fff; border-radius: 10px; overflow: hidden; padding: 77px 55px 33px 55px; box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1); -o-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1); -ms-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);">
 	  	<div class="row">
 		<form class="container" action="auth.php" method="post" style="width: 35rem">
-			<h1 class="text-center pb-3 display-4"><img class="htorlogo" src="./images/htorlogo.svg" alt="HTOR Logo" width="100" height="100"> BLS - Login</h1>
+			<h1 class="text-center display-4"><img class="htorlogo" src="./images/htorlogo.svg" alt="HTOR Logo" width="100" height="100"> BLS - Login</h1>
+			<a href="help.php" class="btn btn-orange ml-4 mb-4">Help/Support</a>
+			<br>
+			<br>
 			<?php
 			if (isset($_GET['error'])) {
 			?>
