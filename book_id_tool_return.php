@@ -82,7 +82,7 @@ if ($result->num_rows > 0) {
       $contactInfo = $row['contactInfo'];
       $issueDate = $row['issueDate'];
       $dueDate = $row['dueDate'];
-        $sql = "INSERT INTO libraryarchive (patronName, contactInfo, bookId, issueDate, dueDate, returnDate) VALUES ('$patronName', '$contactInfo', '$bookId', '$issueDate', '$dueDate', CURRENT_DATE)";
+        $sql = "INSERT INTO libraryarchive (patronName, contactInfo, bookId, issueDate, dueDate, returnDate, fineAmountPaid) VALUES ('$patronName', '$contactInfo', '$bookId', '$issueDate', '$dueDate', CURRENT_DATE, 0
           $result = $mysqli->query($sql) or die(mysqli_error($mysqli));
           $sql = "DELETE FROM librarylog WHERE bookId = '$bookId'";
           $result = $mysqli->query($sql) or die(mysqli_error($mysqli));
